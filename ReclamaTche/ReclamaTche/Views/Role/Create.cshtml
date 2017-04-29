@@ -1,0 +1,28 @@
+﻿@model Microsoft.AspNet.Identity.EntityFramework.IdentityRole
+@{
+    ViewBag.Title = "Nivel de Acesso";
+}
+
+<h2>Criar Nivel de Acesso</h2>
+
+@*<style type="text/css">
+        #tbrole, .c {
+            border: double;
+        }
+    </style>*@
+
+
+@using (Html.BeginForm())
+{
+
+    <form>
+        <div class="form-group">
+            <label for="nomeNivel">Nome do Nível:</label>
+            @*<input type="text" class="form-control" id="nomeNivel" placeholder="Nível">*@
+            @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control", @placeholder="Nível" } })
+        </div>
+
+
+        <input class="btn btn-default" type="submit" value="Criar">
+    </form>
+}

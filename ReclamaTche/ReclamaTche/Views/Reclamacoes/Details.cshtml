@@ -1,0 +1,108 @@
+﻿@model ReclamaTche.Models.Reclamacao
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div>
+    <br />
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-sm-3 well">
+                <div class="well">
+                    <img class="img-rounded" width="200" src="@Url.Action("GetImage", "Reclamacoes", new { id = Model.ReclamacaoID })" />
+                </div>
+                @if (Model.Status == ReclamaTche.Models.Status.ABERTO && Request.IsAuthenticated)
+                {
+                    <div>
+
+                        @if (Context.User.IsInRole("Básico"))
+                        {
+                            <span>
+                                @Html.ActionLink(" Resolvido", "Resolvido", new { id = Model.ReclamacaoID }, new { @class = "btn btn-success btn-lg btn-block glyphicon glyphicon-ok" })
+                            </span>
+                        }
+                        @if (Context.User.IsInRole("Oficial"))
+                        {
+                            <br/> <br />
+                            <span>
+                                @Html.ActionLink(" Encerrar", "Encerrar", new { id = Model.ReclamacaoID }, new { @class = "btn btn-danger btn-lg btn-block glyphicon glyphicon-ok" })
+                            </span>
+                        }
+                    </div>
+                }
+                <br />
+                <div class="well text-left">
+                    <p><span class="glyphicon glyphicon-user"></span> @Html.DisplayFor(model => model.Usuario)</p>
+                    <p><span class="glyphicon glyphicon-time"></span> @Html.DisplayFor(model => model.ReleaseDate)</p>
+                    <p><span class="glyphicon glyphicon-tag"></span> @Html.DisplayFor(model => model.Categoria.Nome)</p>
+                    <p><span class="glyphicon glyphicon-wrench"></span> @Html.DisplayFor(model => model.Status)</p>
+                </div>
+                @*
+                    <div class="well">
+                        <p><a href="#">Interests</a></p>
+                        <p>
+                            <span class="label label-default">News</span>
+                            <span class="label label-primary">W3Schools</span>
+                            <span class="label label-success">Labels</span>
+                            <span class="label label-info">Football</span>
+                            <span class="label label-warning">Gaming</span>
+                            <span class="label label-danger">Friends</span>
+                        </p>
+                    </div>
+                *@
+
+                @if (Model.Status != ReclamaTche.Models.Status.ENCERRADO && Model.Usuario == User.Identity.Name)
+                {
+                    <span>
+                        @Html.ActionLink(" Editar", "Edit", new { id = Model.ReclamacaoID }, new { @class = "btn btn-warning editBtn glyphicon glyphicon-pencil" })
+                    </span>
+                    <span>
+                        @Html.ActionLink(" Excluir", "Delete", new { id = Model.ReclamacaoID }, new { @class = "btn btn-danger deleteBtn glyphicon glyphicon-trash" })
+                    </span>
+                }
+            </div>
+            <div class="col-sm-7">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        @if (!Request.IsAuthenticated)
+                        {
+                            <div class="alert alert-info fade in">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                                <p><strong>Olá, visitante!</strong></p>
+                                @Html.ActionLink("Cadastre-se agora", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" }) para aproveitar o nosso site!
+                                Já possui uma conta?
+                                @Html.ActionLink("Faça login!", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+                            </div>
+                        }
+                        <div class="panel panel-default text-left">
+                            <div class="panel-body">
+                                <h3>@Html.DisplayFor(model => model.Nome)</h3>
+                                <p><span class="glyphicon glyphicon-map-marker"></span> @Html.DisplayFor(model => model.Endereco) (@Html.DisplayFor(model => model.Bairro))</p>
+                                <hr />
+                                <p>@Html.DisplayFor(model => model.Descricao)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @{Html.RenderAction("List", "Comentarios", new { RecID = Model.ReclamacaoID });}
+
+                @if ((Context.User.IsInRole("Oficial") || Context.User.IsInRole("Básico")) && Model.Status != ReclamaTche.Models.Status.ENCERRADO)
+                {
+                    <div>
+
+                        @{Html.RenderAction("Comment", "Reclamacoes", new { RecID = Model.ReclamacaoID });}
+                    </div>
+                            }
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<p>
+    @Html.ActionLink("Ir para a Lista de Reclamações", "Index")
+</p>

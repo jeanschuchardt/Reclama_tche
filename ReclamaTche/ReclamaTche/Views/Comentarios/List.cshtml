@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ReclamaTche.Models.Comentario>
+
+    
+            <div class="list-group" >
+                @foreach (var item in Model)
+                {
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="well">
+                                <p>@Html.DisplayFor(modelItem => item.Usuario)</p>
+                                <img src="~/Images/usuariosemfoto.png" class="img-circle" height="50" width="50" alt="Avatar">
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="well">
+                                <p class="text-left">@Html.DisplayFor(modelItem => item.Body)</p>
+                                @if (item.ImageFile != null)
+                                { <p><img class="img-rounded" width="200" src="@Url.Action("GetImage", "Comentarios", new { id=item.Id})" /></p> }
+                                <br />
+                                <p class="text-muted text-right">@Html.DisplayFor(modelItem => item.ReleaseDate)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                @*
+                <a class="list-group-item">
+                    <h4 class="list-group-item-heading">@Html.DisplayFor(modelItem => item.Usuario)</h4>
+                    <h6>@Html.DisplayFor(modelItem => item.ReleaseDate)</h6>
+                    <p class="list-group-item-text">@Html.DisplayFor(modelItem => item.Body)</p>
+                    @if (item.ImageFile != null)
+                    { <p class="list-group-item"><img width="200" src="@Url.Action("GetImage", "Comentarios", new { id=item.Id})" /></p> }
+                </a>
+                *@
+                }
+            </div>
+        @*<td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>*@

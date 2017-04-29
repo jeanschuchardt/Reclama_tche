@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+
+@{
+    ViewBag.Title = "Acontrole de Nível de Usuário";
+
+}
+
+@if (ViewBag.ResultMessage != null)
+{
+
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Feito!</strong>  @ViewBag.ResultMessage
+    </div>
+
+}
+
+
+@if (ViewBag.WarringMessage != null)
+{
+
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Eitcha!</strong>  @ViewBag.WarringMessage
+    </div>
+
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Não rolou!</strong>  @ViewBag.ErrorMessage
+    </div>
+
+}
+
+
+<h2>Acontrole de Nível de Usuário</h2>
+
+@Html.ActionLink("Criar um novo Nível", "Create")
+
+<h2>Adicionar um Nivel a um usuário</h2>
+
+@using (Html.BeginForm("RoleAddToUser", "Role"))
+{
+    <form>
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            <div>
+                Nome de Usuário: @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.listUser, "Selecionar..", htmlAttributes: new { @class = "form-control" })
+                Nível de acesso: @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "Selecionar ...", htmlAttributes: new { @class = "form-control" })
+
+
+            </div>
+        </div>
+        
+        <input class="btn btn-default" type="submit" value="Adicionar">
+    </form>
+}
+
+
+<hr />
+
+<h3>Listar Niveis de um usuário</h3>
+@using (Html.BeginForm("GetRoles", "Role"))
+{
+    @Html.AntiForgeryToken()
+    <p>
+        Nome de Usuário : @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.listUser, "Selecionar ...", htmlAttributes: new { @class = "form-control" })
+        @* <input type="submit" value="Ver níveis" />*@
+        <input class="btn btn-default" type="submit" value="Ver Níveis">
+    </p>
+
+}
+
+
+
+@if (ViewBag.RolesForThisUser != null)
+{
+    <div style="background-color:yellow;">
+        <h3>Niveis desse usuário: </h3>
+        <ol>
+            @foreach (string s in ViewBag.RolesForThisUser)
+            {
+                <li>@s</li>
+            }
+        </ol>
+    </div>
+
+}
+
+<hr />
+
+
+<h3>Remover Nivel de acesso a um usuário</h3>
+
+@using (Html.BeginForm("DeleteRoleForUser", "Role"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <p>
+        Nome de Usuário : @Html.DropDownList("UserName", (IEnumerable<SelectListItem>)ViewBag.listUser, "Selecionar ...", htmlAttributes: new { @class = "form-control" })
+        Nível de acesso: @Html.DropDownList("RoleName", (IEnumerable<SelectListItem>)ViewBag.Roles, "Selecionar ...", htmlAttributes: new { @class = "form-control" })
+
+    </p>
+
+    <input class="btn btn-default" type="submit" value="Remover">
+    //    <input type="submit" value="Remover" />
+}

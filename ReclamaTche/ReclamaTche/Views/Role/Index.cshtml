@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Níveis de Acesso</h2>
+
+@Html.ActionLink("Criar Novo Nível", "Create", "Role")
+
+
+<!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
+<br />
+
+<div class="row">
+    <div class="col-xs-6 col-md-4">
+
+    </div>
+    <div class="col-xs-6 col-md-4">
+        <table class="table table-striped">
+
+            <tr>
+                <td>
+                    <strong> Nível</strong>
+                </td>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr class="active">
+                    <td>
+                        @item.Name
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="col-xs-6 col-md-4">
+
+    </div>
+</div>

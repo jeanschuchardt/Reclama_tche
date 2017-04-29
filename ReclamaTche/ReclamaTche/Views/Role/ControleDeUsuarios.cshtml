@@ -1,0 +1,34 @@
+﻿@*@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+@{
+    ViewBag.Title = "Controle De Usuarios";
+}
+
+<h2>ControleDeUsuarios</h2>
+
+@using (Html.BeginForm("listRole", "Role"))
+{
+<div>
+   
+    
+    <div>
+        <span>
+            @ViewBag.userName  
+        </span>
+        <div>
+          Html.RenderPartial("listRoles");
+
+        </div>
+
+       
+
+
+    </div>
+
+    
+
+</div>
+}
+<p>
+  
+  @*  @Html.ActionLink("Back to List", "Index")*@
+</p>*@

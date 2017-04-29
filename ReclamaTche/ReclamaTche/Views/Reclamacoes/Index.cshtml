@@ -1,0 +1,177 @@
+﻿@model IEnumerable<ReclamaTche.Models.Reclamacao>
+
+
+@{
+    ViewBag.Title = "Reclamacoes";
+}
+
+<h2>Reclamações</h2>
+@if (Context.User.IsInRole("Básico"))
+{
+    <p>
+        @Html.ActionLink("Abrir Reclamação", "Create", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
+    </p>
+}
+
+<div>
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 well">
+
+                @using (Html.BeginForm())
+                {
+                    <p>
+                        <h4><span class="glyphicon glyphicon-search"></span> Pesquisar</h4>
+                        <span>
+                            @Html.TextBox("SearchString", value: null, htmlAttributes: new { @class = "form-control" })
+                        <input class="btn btn-default" type="submit" value="Buscar" />
+                    </span> <br />
+                        <hr />
+                        <h4><span class="glyphicon glyphicon-cog"></span> Configurações de Pesquisa</h4>
+                        <h5><span class="glyphicon glyphicon-calendar"></span> Período de Tempo</h5>
+                        De: @Html.TextBox("fromDate", value: null, htmlAttributes: new { @class = "form-control datepicker" })
+                        Até: @Html.TextBox("toDate", value: null, htmlAttributes: new { @class = "form-control datepicker" })
+                        <h5><span class="glyphicon glyphicon-wrench"></span> Status</h5>
+                        <div class="list-group">
+                        Abertas: @Html.CheckBox("aberto", true, new { @class = "list-group-item"}) <br />
+                        Resolvidas: @Html.CheckBox("resolvido", true, new { @class = "list-group-item" }) <br />
+                        Encerradas: @Html.CheckBox("encerrado", true, new { @class = "list-group-item" }) <br />
+                        </div>
+                        <h5><span class="glyphicon glyphicon-tag"></span> Categoria</h5>
+                        @Html.DropDownList("SelectedCategory", selectList: null, optionLabel: "Todas", htmlAttributes: new { @class = "list-group" })
+                        <h5><span class="glyphicon glyphicon-map-marker"></span> Bairro</h5>
+                        @Html.DropDownList("Bairro", new SelectList(ViewBag.Bairro), "Todos")
+                    </p>
+                }
+            </div>
+
+            <div class="col-sm-7">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#home"><span class="glyphicon glyphicon-list"></span> Lista</a></li>
+                            <li><a href="#estatisticas"><span class="glyphicon glyphicon-stats"></span> Estatísticas</a></li>
+                        </ul>
+
+                        
+
+                        <div class="tab-content">
+                            <div id="home" class="tab-pane fade in active">
+                                <table class="table table-striped table-hover">
+
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <img class="img-rounded" width="200" src="@Url.Action("GetImage", "Reclamacoes", new { id=item.ReclamacaoID})" />
+                                            </td>
+                                            <td>
+                                                <h3>@Html.ActionLink(item.Nome.ToString(), "Details", new { id = item.ReclamacaoID })</h3>
+                                                <h6>Criado por @Html.DisplayFor(modelItem => item.Usuario) em @Html.DisplayFor(modelItem => item.ReleaseDate)</h6>
+                                                <h6><span class="glyphicon glyphicon-map-marker"></span>@Html.DisplayFor(modelItem => item.Endereco) (@Html.DisplayFor(modelItem => item.Bairro))</h6>
+                                                @if (item.Descricao.Length > 250)
+                                                {
+                                                    <h5>@item.Descricao.ToString().Substring(0, 250) ...</h5>
+                                                }
+                                                @if (item.Descricao.Length <= 250)
+                                                {
+                                                    <h5>@Html.DisplayFor(modelItem => item.Descricao)</h5>
+                                                }
+                                            </td>
+                                            <td>
+                                                <br /><br />
+                                                @Html.DisplayFor(modelItem => item.Status)
+                                                <br />
+                                                @Html.DisplayFor(modelItem => item.Categoria.Nome)
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </table>
+                                </div>
+                            <div id="estatisticas" class="tab-pane fade">
+                                <div>
+                                    <h4>
+                                        Com base em @ViewBag.stat1 reclamações selecionadas:
+                                    </h4>
+                                    <hr />
+                                    <dl >
+                                        <dt>
+                                            Número de Comentários
+                                        </dt>
+                                        <dd>
+                                            @ViewBag.stat2
+                                        </dd>
+                                        <dt>
+                                            Média de Comentários
+                                        </dt>
+                                        <dd>
+                                            @ViewBag.stat3
+                                        </dd>
+                                        <dt>
+                                            Reclamações Abertas
+                                        </dt>
+                                        <dd>
+                                            @ViewBag.stat4 %
+                                        </dd>
+                                        <dt>
+                                            Porcentagem de Reclamações Resolvidas
+                                        </dt>
+                                        <dd>
+                                            @ViewBag.stat5 %
+                                        </dd>
+                                        <dt>
+                                            Porcentagem de Reclamações Encerradas
+                                        </dt>
+                                        <dd>
+                                            @ViewBag.stat6 %
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+    </div>
+</div>
+ 
+                        @section Scripts {
+
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $('#SearchString').autocomplete({
+                                        source: '@Url.Action("ReclamaFilter")'
+                                    });
+                                })
+                            </script>
+
+                            <script type="text/javascript">
+                                $(function () { // will trigger when the document is ready
+                                    $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy ' }).val(); //Initialise any date pickers
+                                });
+                                $("#DateField").datepicker({
+                                    showButtonPanel: true,
+                                    closeText: 'Clear',
+                                    onClose: function (dateText, inst) {
+                                        if ($(window.event.srcElement).hasClass('ui-datepicker-close')) {
+                                            document.getElementById(this.id).value = '';
+                                        }
+                                    }
+                                });
+                            </script>
+
+<script>
+$(document).ready(function(){
+    $(".nav-tabs a").click(function(){
+        $(this).tab('show');
+    });
+});
+</script>
+
+
+                        }

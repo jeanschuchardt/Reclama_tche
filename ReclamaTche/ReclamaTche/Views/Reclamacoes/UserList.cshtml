@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ReclamaTche.Models.Reclamacao>
+
+@using (Html.BeginForm("UserList", "Reclamacoes"))
+{
+
+<table class="table table-striped table-hover">
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img class="img-rounded" width="200" src="@Url.Action("GetImage", "Reclamacoes", new { id=item.ReclamacaoID})" />
+            </td>
+            <td>
+                <h3>@Html.ActionLink(item.Nome.ToString(), "Details", new { id = item.ReclamacaoID })</h3>
+                <h6>@Html.DisplayFor(modelItem => item.ReleaseDate)</h6>
+                <h6><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> @Html.DisplayFor(modelItem => item.Status) <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> @Html.DisplayFor(modelItem => item.Categoria.Nome)</h6>
+                @if (item.Descricao.Length > 250)
+                {
+                    <h5>@item.Descricao.ToString().Substring(0, 250) ...</h5>
+                }
+                @if (item.Descricao.Length <= 250)
+                {
+                    <h5>@Html.DisplayFor(modelItem => item.Descricao)</h5>
+                }
+            </td>
+
+            <td>
+                
+                @if (item.Usuario == User.Identity.Name)
+                {
+                    <br />
+                    @Html.ActionLink(" ", "Edit", new { id = item.ReclamacaoID }, new { @class = "btn btn-warning editBtn glyphicon glyphicon-pencil" })
+                    <br />
+                    @Html.ActionLink(" ", "Delete", new { id = item.ReclamacaoID }, new { @class = "btn btn-danger deleteBtn glyphicon glyphicon-trash" })
+
+                }
+
+            </td>
+
+        </tr>
+    }
+
+</table>
+}
